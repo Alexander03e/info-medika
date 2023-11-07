@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДЛЦ «ИНФО-МЕДИКА»</title>
+    <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="libs/jq/jquery.maskedinput.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="row g-0  form-steps">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 grid text-center ">
+                    <div class="grid-step">
+                        <div class="firstStep">
+                            <div class="firststep-block block-1">
+                                <div class="form-steps__num"><p class="nums">1</p>Шаг</div>
+                                <div class="form-steps__name">УСЛУГА</div>
+                            </div>
+                            <div class="firstStep-arrow">
+                                <img src="img/Arrow.png" alt="">
+                            </div>
+                        </div>
+                        <div class="twoStep">
+                            <div class="twostep-block block-1">
+                                <div class="form-steps__twonum"><p class="twonums">2</p>Шаг</div>
+                                <div class="form-steps__twoname">ВРАЧ, ВРЕМЯ И МЕСТО</div>
+                            </div>
+                            <div class="twoStep-arrow">
+                                <img src="img/Arrow.png" alt="">
+                            </div>
+                        </div>
+                        <div class="threeStep">
+                            <div class="threestep-block block-1">
+                                <div class="form-steps__threenum"><p class="threenums">3</p>Шаг</div>
+                                <div class="form-steps__threename">ДАННЫЕ ПАЦИЕНТА</div>
+                            </div>
+                            <div class="firstStep-done">
+                                <img src="img/Done.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>   
+            
+                
+            </div>
+            <div class="row">
+                <div class="col-md-12  ">  
+                    <div class="title-block__form-title  ">                    
+                        <img src="img/Medical Doctor.svg" alt=""> 
+                        <h1>запись онлайн</h1>
+                    </div>
+                    <p class="title-text">
+                        Внимание! Запись через сайт доступна только для пациентов, получающих услуги за наличный расчет/ по банковской карте.
+                        Для пациентов по ДМС доступна запись по телефону <span>(383) 304 77 32</span>
+                    </p>
+                </div>
+            </div>
+            <div class="row sercheBtn g-0">
+                <div class="col-md-4">
+                    <div class="s006">
+                        <form>
+                            <fieldset>
+                              <div class="inner-form">
+                                <div class="input-field">
+                                  <button class="btn-search" type="button">
+                                    <img src="img/Search.svg" alt="">
+                                  </button>
+                                  <input id="search" type="text" placeholder="ФИО или специализация врача" value="" />
+                                </div>
+                              </div>
+                            </fieldset>
+                          </form>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="btn-block d-flex">
+                        <div class="btn-block__text">
+                            Если Вы не знаете к какому специалисту записаться, 
+                            нужно сначала посетить специалиста широкого профиля:
+                        </div>
+                        <div class="ourBtn">
+                            <button class="therapist">терапевт</button>
+                            <button class="pediatrician">педиатр</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="firstBlock-tabs__smallTitle">Выберите услугу:</p>
+                </div>
+            </div> 
+            <div class="row g-0">
+                <div class="col-md-12 parentTabs  ">
+                    
+                      
+                            <div class="tables__table table table--1 navs ">
+                                <button class="table__btn btn btn--compTam nav-links nav-lines ">Аргоноплазменная коагуляция</button>
+                                <button class="table__btn btn btn--labs nav-links nav-lines ">Биорезонансная терапия</button>
+                                <button class="table__btn btn btn--mams nav-links nav-lines">Гирудотерапия</button>
+                                <button class="table__btn btn btn--A nav-links nav-lines">Консультации врачей</button>
+                                <button class="table__btn btn btn--children nav-links nav-lines">Ультразвуковое исследование (УЗИ)</button>
+                                <button class="table__btn btn btn--B nav-links nav-lines">Иглоукалывание</button>
+                                <button class="table__btn btn btn--stoms nav-links nav-lines">Интимная пластика</button>
+                                <button class="table__btn btn btn--uzis nav-links nav-lines">Кинезиотейпирование</button>
+                                <button class="table__btn btn btn--ecg nav-links nav-lines">ЭКГ</button>
+                            </div>
+                      
+                      
+                            <div class="tables__table table table--2A navs background-blocks">
+                                <button class="table__btn btn btn--D nav-links nav-lines">Гинеколог</button>
+                                <button class="table__btn btn btn--E nav-links nav-lines">Дерматовенеролог</button>
+                                <button class="table__btn btn btn--F nav-links nav-lines">Кардиолог</button>
+                                <button class="table__btn btn btn--gast nav-links nav-lines">Колопроктолог</button>
+                                <button class="table__btn btn btn--gemo nav-links nav-lines">Лор</button>
+                                <button class="table__btn btn btn--derm nav-links nav-lines">Мануальный терапевт</button>
+                                <button class="table__btn btn btn--infect nav-links nav-lines">Невролог</button>
+                                <button class="table__btn btn btn--cardiolog nav-links nav-lines">Онколог-маммолог</button>
+                                <button class="table__btn btn btn--ophthalmologist nav-links nav-lines">Офтальмолог</button>
+                                <button class="table__btn btn btn--psychologist nav-links nav-lines">Психолог</button>
+                                <button class="table__btn btn btn--pulmonologist nav-links nav-lines">Пульмонолог</button>
+                                <button class="table__btn btn btn--reflexologist nav-links nav-lines">Рефлексотерапевт</button>
+                                <button class="table__btn btn btn--therapist nav-links nav-lines">Терапевт</button>
+                                <button class="table__btn btn btn--surgeon nav-links nav-lines">Хирург</button>
+                                <button class="table__btn btn btn--endocrinologist nav-links nav-lines">Эндокринолог</button>
+                            </div>
+                            <div class="tables__table table table--2children navs">
+                                <button class="table__btn btn btn--ginec nav-links nav-lines">УЗИ брюшной полости</button>
+                                <button class="table__btn btn btn--childGastr nav-links nav-lines">УЗИ малого таза</button>
+                                <button class="table__btn btn btn--childGema nav-links nav-lines">Узи матки</button>
+                                <button class="table__btn btn btn--childGinec nav-links nav-lines">УЗИ молочной железы</button>
+                                <button class="table__btn btn btn--childDerm nav-links nav-lines">Узи мочевого пузыря</button>
+                                <button class="table__btn btn btn--childCardiolog nav-links nav-lines">Узи печени</button>
+                                <button class="table__btn btn btn--childKinez nav-links nav-lines">УЗИ почек</button>
+                                <button class="table__btn btn btn--childLogoped nav-links nav-lines">Узи простаты</button>
+                                <button class="table__btn btn btn--fetal-heart nav-links nav-lines">Узи сердца плода</button>
+                                <button class="table__btn btn btn--lower-extremities nav-links nav-lines">УЗИ сосудов верхних и нижних конечностей</button>
+                                <button class="table__btn btn btn--the-joints nav-links nav-lines">Узи суставов</button>
+    
+                                <button class="table__btn btn btn--the-neck nav-links nav-lines">Узи шеи</button>
+                                <button class="table__btn btn btn--thyroid-gland nav-links nav-lines">УЗИ щитовидной железы</button>
+                            </div>
+                     
+                    
+                       
+                            <div class="tables__table table table--3D navs bacg">
+                                <button class="table__btn btn btn--G nav-links nav-lines">Первичный</button>
+                                <button class="table__btn btn btn--K nav-links nav-lines">Повторный</button>
+                            </div>
+                            <div class="tables__table table table--2B navs bacg">
+                                <button class="table__btn btn btn--DD nav-links nav-lines">Иглоукалывание</button>
+                            </div>
+                            <div class="tables__table table table--compTamTab navs bacg">
+                                <button class="table__btn btn btn--compTamtabs nav-links nav-lines">Аргоноплазменная коагуляция</button>
+                            </div>
+                            <div class="tables__table table table--lab navs bacg">
+                                <button class="table__btn btn btn--labtabs nav-links nav-lines">Биорезонансная терапия</button>
+                            </div>
+                            <div class="tables__table table table--mam navs bacg">
+                                <button class="table__btn btn btn--mamtabs nav-links nav-lines">Гирудотерапия</button>
+                            </div>
+                            <div class="tables__table table table--stom navs bacg">
+                                <button class="table__btn btn btn--stomtabs nav-links nav-lines">Интимная пластика</button>
+                            </div>
+                            <div class="tables__table table table--uzi navs bacg">
+                                 <button class="table__btn btn btn--uzitabs nav-links nav-lines">Кинезиотейпирование</button>
+                            </div>
+                            <div class="tables__table table table--ecgs1 navs bacg">
+                                <button class="table__btn btn btn--ecgs nav-links nav-lines">ЭКГ</button>
+                           </div>
+                
+                    
+                        
+                   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btnBlock">
+                        <a href="calendar.html">далее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <script src="libs/bootstrap/js/bootstrap.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+    <script src="libs/jq/jquery.maskedinput.js" ></script>
+    <script src="js/script.js" ></script>
+    <script>
+        $(document).ready(function() {
+            $("input[type='phone']").mask("+7 (999) 999-99-99");
+        });
+        $('input[name="flexRadioDefault1"]').click(function(){
+        $('input[name="flexRadioDefault2"]').prop("checked", false);
+    });
+    $('input[name="flexRadioDefault2"]').click(function(){
+        $('input[name="flexRadioDefault1"]').prop("checked", false);
+    });
+    
+    </script>
+</body>
+</html>
