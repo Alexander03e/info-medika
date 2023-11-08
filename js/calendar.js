@@ -1,3 +1,4 @@
+
 //текущий месяц
 const date = new Date();
 const monthName = date.toLocaleString('default', {month: 'long'});
@@ -79,6 +80,17 @@ function forDoc1(){
     data[13]={
         isActive:false
     }
+
+    //----xhr запросы
+    let requestURL = 'https://rest.info-medika.ru:45678/GET_pl_exam'
+    let xhr = new XMLHttpRequest()
+    xhr.open('GET', requestURL)
+    xhr.send()
+
+    xhr.onload = () => {
+        console.log(xhr.response)
+    }
+    //----
     generateCal()
     timeEl.classList.add('visible')
     
@@ -103,7 +115,7 @@ console.log(data)
 const doc1 = document.getElementById('doc1');
 const doc2 = document.getElementById('doc2');
 
-forDoc1()
+forDoc1() //начальная генерация календаря
 //потом раскомментировать 
 doc1.addEventListener('click', function(){
     forDoc1()
@@ -150,30 +162,46 @@ for (let i=0; i<monthLength; i++){
 }
 
 const dayButtons = document.querySelectorAll('.variableDays');
-
+let selectedDay = false;
+let selectedTime = false;
 dayButtons.forEach(button => {
-  button.addEventListener('click', (e) => {
+
+    
+    button.addEventListener('click', (e) => {
+
     console.log(e.target.textContent)
+
     dayButtons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
-
+    checkSelection()
   });
 });
-    
+
 const buttons = document.querySelectorAll('.variable');
 
 buttons.forEach(button => {
   button.addEventListener('click', (e) => {
-    console.log(e.target.textContent)
     buttons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
-
+    selectedTime = true;
+    checkSelection()
   });
 });
-    
+
+const checkSelection = () => {
+    for (let i = 0 ; i<dayButtons.length; i++){
+        if(dayButtons[i].classList.contains('-active')){
+            selectedDay = true;     
+          
+        }
+    }
+    if (selectedDay && selectedTime){
+        document.getElementById('next').style.pointerEvents = 'auto';
+        document.getElementById('next').style.backgroundColor = 'var(--accent-color)'
+        document.getElementById('next').style.color='white'
+    }
 }
 
 
-
-
+}
 

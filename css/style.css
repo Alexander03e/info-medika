@@ -1010,6 +1010,7 @@ body {
   margin-top: 39px;
 }
 .send-btn-second-page .send-btn-second-page-disabled {
+  pointer-events: none;
   display: block;
   padding: 13px 40px;
   color: var(--accent-color);
