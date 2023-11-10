@@ -71,7 +71,6 @@ doctorsPrimary.forEach(item => item.addEventListener('click',()=>{
     let result = surname[0] + '.' + surname[1].slice(0,1) + '.'+surname[2].slice(0,1);
     document.getElementById('doc__name').innerHTML = `Доступные дни приема для  ${result} :`
     console.log(item.closest('.content-item').firstElementChild.textContent)
-
     
     getData(item)
     
@@ -106,11 +105,9 @@ switch(monthName){
     break;
     default: console.log('false')
 }
-console.log(monthLength)
 let data = []
-for (let i=0; i<monthLength; i+=1){
-    
-}
+
+//очищает массив с данными
 function clearField(){
     data = []
     for (let i=0; i<monthLength; i+=1){
@@ -124,7 +121,7 @@ function clearField(){
 }
 const timeEl = document.querySelector('.hide')
 
-generateCal()
+
 //генерация календаря
 function generateCal(data){
 
@@ -165,14 +162,11 @@ const dayButtons = document.querySelectorAll('.variableDays');
 let selectedDay = false;
 let selectedTime = false;
 dayButtons.forEach(button => {
-
-    
     button.addEventListener('click', (e) => {
-
     console.log(e.target.textContent)
-
     dayButtons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
+    
     checkSelection()
   });
 });
@@ -183,6 +177,7 @@ buttons.forEach(button => {
   button.addEventListener('click', (e) => {
     buttons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
+    
     selectedTime = true;
     checkSelection()
   });
