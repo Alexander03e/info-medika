@@ -1,23 +1,82 @@
 
-//текущий месяц
 const date = new Date();
+const requestURL = 'https://rest.info-medika.ru:45678/GET_pl_subj/?details=1'
 const monthName = date.toLocaleString('default', {month: 'long'});
 const curdate = document.getElementById('curdate')
-
+const monthDay = date.getMonth()+1
 curdate.innerHTML =  `${monthName.slice(0,1).toUpperCase()}${monthName.slice(1)}  2023`
 
 const calendar = document.querySelector('.calendar')
 
 let doctorsPrimary = document.querySelectorAll('.primary-reception')
+async function getData(item){
+    try {
+        const response = await fetch(requestURL)
+        const data = await response.json()
+        console.log(data)
+        let bool = false
+        await data.forEach(el => {
+            
+            let arrName = item.closest('.content-item').firstElementChild.textContent.split(' ')
+            let surName = arrName[0]
+           
+            let arrNameApi = el.pl_subj_name.split(' ')
+            let surNameApi = arrNameApi[0]
+           
+            if (surName === surNameApi) {
+                generateCalApi(el.details)
+                bool = !bool
+            }
+            
+            
+        })
+        if (bool == false ){
+            document.querySelector('.calendar').textContent = 'Для этого врача пока нет расписания'
+            document.querySelector('.calendar-days').classList.add('hidden')
+            document.querySelector('.calendar__time').classList.add('hidden')
+        }
+        return data;
+        
+    }catch(e){
+        console.log(e)
+    }
+}
 
+function generateCalApi(details){
+    clearField()
+    document.querySelector('.calendar-days').classList.remove('hidden')
+    document.querySelector('.calendar__time').classList.remove('hidden')
+    
+    for (let i=0; i<monthLength; i++){
+        
+        data.push({id:i, time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема'})
+        for (let j = 0; j<details.length; j++){
+            let workDate = details[j].date.split('-')
+            let workDay = workDate[2]
+            console.log(monthDay)
+            if (data[i].id == workDay && monthDay == workDate[1]){
+                data[i].time = `${details[j].start_time}-${details[j].end_time}`
+            }
+            
+        }
+    }
+    generateCal(data)
+    console.log(data)
+    
+}
+//получение имени
 doctorsPrimary.forEach(item => item.addEventListener('click',()=>{
     let name = item.closest('.content-item').firstElementChild.textContent
     let surname = name.split(' ')
     let result = surname[0] + '.' + surname[1].slice(0,1) + '.'+surname[2].slice(0,1);
     document.getElementById('doc__name').innerHTML = `Доступные дни приема для  ${result} :`
-    forDoc2()
-    console.log(item.closest('.content-item').firstElementChild.textContent)}
-    ))//получение имени
+    console.log(item.closest('.content-item').firstElementChild.textContent)
+
+    
+    getData(item)
+    
+    })
+)
 
 //колво дней в каждом месяце чтобы календарь сам обновлялся
 switch(monthName){
@@ -50,7 +109,7 @@ switch(monthName){
 console.log(monthLength)
 let data = []
 for (let i=0; i<monthLength; i+=1){
-    data.push({id:i, time:'', isActive:true, isWorking: false, content:'Нет приема'})
+    
 }
 function clearField(){
     data = []
@@ -65,70 +124,9 @@ function clearField(){
 }
 const timeEl = document.querySelector('.hide')
 
-function forDoc1(){
-    clearField()
-    
-    //добавлять данные для 1 доктора
-    data[2]={
-        isWorking:false,
-        time: '8:00-19:00'
-    }
-    data[3]={
-        isWorking:true,
-        time:'8:00-19:00'
-    }
-    data[13]={
-        isActive:false
-    }
-
-    //----xhr запросы
-    let requestURL = 'https://rest.info-medika.ru:45678/GET_pl_exam'
-    let xhr = new XMLHttpRequest()
-    xhr.open('GET', requestURL)
-    xhr.send()
-
-    xhr.onload = () => {
-        console.log(xhr.response)
-    }
-    //----
-    generateCal()
-    timeEl.classList.add('visible')
-    
-   
-}
-function forDoc2(){
-    clearField()
-    
-    //добавлять данные для 2 доктора
-    data[5]={
-        isWorking:true,
-        time:'19:00-20:00',
-    }
-    data[6]={
-        isActive:false
-    }
-    generateCal()
-    
-}
-console.log(data)
-
-const doc1 = document.getElementById('doc1');
-const doc2 = document.getElementById('doc2');
-
-forDoc1() //начальная генерация календаря
-//потом раскомментировать 
-doc1.addEventListener('click', function(){
-    forDoc1()
-    console.log(data[2].content)
-})
-doc2.addEventListener('click', function(){
-    forDoc2()
-})
-
-
-
+generateCal()
 //генерация календаря
-function generateCal(){
+function generateCal(data){
 
 const timeBlock = document.createElement('div')
 
@@ -137,7 +135,7 @@ for (let i=0; i<monthLength; i++){
     const elementText = document.createTextNode(data[i].content)
     calElement.className = "calendar__item item variableDays"
     calElement.appendChild(elementText)
-    calElement.innerHTML='<p class="item__data">'+ (i+1)+'.'+date.getMonth()+'</p>'+'<p>' + data[i].time+'</p>'
+    calElement.innerHTML='<p class="item__data">'+ (i+1)+'.'+monthDay+'</p>'+'<p>' + data[i].time+'</p>'
     
     calendar.appendChild(calElement)
     
@@ -150,11 +148,13 @@ for (let i=0; i<monthLength; i++){
     }
     if (data[i].time!=''){
         if (calElement.lastChild.textContent!='Нет приема'){
-            calElement.setAttribute('disabled', '')
             calElement.firstChild.style.color ='var(--accent-color)'
             calElement.lastChild.style.color = 'var(--accent-color)'
             calElement.style.borderColor='var(--accent-color)'
             calElement.style.backgroundColor='#cde7b7';
+        }
+        else{
+            calElement.setAttribute('disabled', '')
         }
     }
     

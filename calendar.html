@@ -449,7 +449,7 @@
                 <p id="doc__name"></p>
                 <p id="curdate"></p>
             </div>
-            <div class="calendar-days">
+            <div class="calendar-days hidden">
                 <p>ПН</p>
                 <p>ВТ</p>
                 <p>СР</p>
@@ -462,7 +462,7 @@
             <div class="calendar grid grid-cols-7 ">
             </div>
 
-            <div class="calendar__time hide">
+            <div class="calendar__time hidden">
                 <button class="variable">1</button>
                 <button class="variable">2</button>
                 <button class="variable">3</button>
@@ -517,6 +517,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
 <script src="libs/jq/jquery.maskedinput.js"></script>
 <script src="js/script.js"></script>
+<script src = 'js/state.js'></script>
 <script>
     $(document).ready(function () {
         $("input[type='phone']").mask("+7 (999) 999-99-99");

@@ -1542,4 +1542,8 @@ h2 {
 .calendar-days {
   font-size: 1.8em;
   font-weight: 700;
+}
+
+.hidden {
+  display: none;
 }/*# sourceMappingURL=style.css.map */
