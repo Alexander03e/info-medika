@@ -89,7 +89,6 @@ function generateCalApi(details){
         }
     }
     generateCal(data)
-    console.log(data)
     
 }
 //получение имени
