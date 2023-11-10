@@ -1,6 +1,7 @@
 
 const date = new Date();
 const requestURL = 'https://rest.info-medika.ru:45678/GET_pl_subj/?details=1'
+const requestURL2 = 'https://rest.info-medika.ru:45678/get_pl_subj_grid/?pl_subj_id=166&d1=2023-09-10&d2=2023-12-20'
 const monthName = date.toLocaleString('default', {month: 'long'});
 const curdate = document.getElementById('curdate')
 const monthDay = date.getMonth()+1
@@ -8,9 +9,34 @@ curdate.innerHTML =  `${monthName.slice(0,1).toUpperCase()}${monthName.slice(1)}
 
 const calendar = document.querySelector('.calendar')
 
+const showLoader = () => {
+    document.querySelector('.loader').classList.remove('hidden')
+}
+const hideLoader = () => {
+    document.querySelector('.loader').classList.add('hidden')
+}
+const hideCalendar = () => {
+    document.querySelector('.calendar').innerHTML = ' '
+}
+
+////
+
+
+fetch(requestURL2)
+    .then((response)=>{
+        return response.json()
+    })
+    .then((data) => console.log(data))
+
+
+//проверка запроса на pl_subj_grid
+
+
 let doctorsPrimary = document.querySelectorAll('.primary-reception')
 async function getData(item){
     try {
+        showLoader()
+        hideCalendar()
         const response = await fetch(requestURL)
         const data = await response.json()
         console.log(data)
@@ -26,9 +52,10 @@ async function getData(item){
             if (surName === surNameApi) {
                 generateCalApi(el.details)
                 bool = !bool
+                hideLoader()
             }
             
-            
+            hideLoader()
         })
         if (bool == false ){
             document.querySelector('.calendar').textContent = 'Для этого врача пока нет расписания'
@@ -43,6 +70,7 @@ async function getData(item){
 }
 
 function generateCalApi(details){
+
     clearField()
     document.querySelector('.calendar-days').classList.remove('hidden')
     document.querySelector('.calendar__time').classList.remove('hidden')
