@@ -24,28 +24,9 @@ const nextBtnOff = () => {
     document.getElementById('next').style.pointerEvents = 'none';
     document.getElementById('next').style.backgroundColor = '#CDE7B7';
 }
-// const selectDoctor = (item) => {
-//     store.doctors.forEach(el => {
-//         let arrName = item.closest('.content-item').firstElementChild.textContent.split(' ')
-//         let surName = arrName[0]+' '+arrName[1]
-//         let arrNameApi = el.name.split(' ')
-    
-//         let surNameApi = arrNameApi[0]+' '+arrNameApi[1]
-//         nextBtnOff()
-//         if (surName === surNameApi) {
-//             console.log('true')
-//             generateCalApi(el.details)        
-//             bool = !bool
-//             hideLoader()
-//         }
-//         console.log(false)
-//     })
-// }
-////парсинг 
 let store = {
     doctors:[]
 }
-let times = []
 let i=0;
 
 function getStateGrid(subj_id,item){
@@ -73,14 +54,12 @@ async function getState(){
     try {
         const response = await fetch(requestURL)
         const data = await response.json()
-        console.log(data)
         const promises = data.map(el=>{
             let subj_id = el.pl_subj_id
             return getStateGrid(subj_id,el)
         })
         showLoader()
         await Promise.all(promises)
-        console.log(store)
     }catch(e){
         console.log(e)
     }
@@ -90,25 +69,14 @@ async function getState(){
 async function run(item){
     await getState()
     hideLoader()
-    console.log(store)
 }
+//=====
 run()
-
-
-// fetch(requestURL2)
-//     .then((response)=>{
-//         return response.json()
-//     })
-//     .then((data) => console.log(data))
-
-
-//проверка запроса на pl_subj_grid
-
+//=====запрос на получение данных
 let doctorsPrimary = document.querySelectorAll('.docActivBtn')
 async function getData(item){
     try {
         hideCalendar()
-        console.log(data)
         let bool = false
         store.doctors.forEach(el => {
             
@@ -156,7 +124,7 @@ function generateCalApi(details, times){
                 for(let time of times){
                 
                     if (time.date == details[j].date){
-                        data[i-1].docTime.push({start: time.time_start, end: time.time_end})
+                        data[i-1].docTime.push({start: time.time_start, end: time.time_end, busy: time.busy})
                     }
                 }
             }
@@ -164,7 +132,6 @@ function generateCalApi(details, times){
         }
     }
     generateCal(data)
-    console.log(data)
 }
 //выбор доктора
 doctorsPrimary.forEach(item => item.addEventListener('click',()=>{
@@ -172,7 +139,6 @@ doctorsPrimary.forEach(item => item.addEventListener('click',()=>{
     let surname = name.split(' ')
     let result = surname[0] + '.' + surname[1].slice(0,1) + '.'+surname[2].slice(0,1);
     document.getElementById('doc__name').innerHTML = `Доступные дни приема для  ${result} :`
-    console.log(item.closest('.content-item').firstElementChild.textContent)
     document.querySelector('.calendar__time').innerHTML = ' '
     getData(item)
     })
@@ -263,14 +229,24 @@ const dayButtons = document.querySelectorAll('.variableDays');
 
 dayButtons.forEach(button => {
     button.addEventListener('click', (e) => {
+    selectedTime = false 
     let id = e.currentTarget.textContent.split('.')[0]
-    selectedTime = false
     dayButtons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
     document.querySelector('.calendar__time').innerHTML = ' '
-    console.log(data[id-1].docTime)
+    checkSelection()
     for (let timeItem of (data[id-1].docTime)){
-        document.querySelector('.calendar__time').innerHTML += `<button class="variable">${timeItem.start}-${timeItem.end}</p>`
+        let workStatus = ''
+        let btnStatus
+        if (timeItem.busy == 1){
+            workStatus = 'busy'
+            btnStatus = 'disabled'
+        } else if(timeItem.busy == 0){
+            workStatus = 'free'
+
+        }
+
+        document.querySelector('.calendar__time').innerHTML += `<button class="variable ${workStatus}" ${btnStatus}>${timeItem.start}-${timeItem.end}</p>`
     }   
     const buttons = document.querySelectorAll('.variable');
 
@@ -278,39 +254,35 @@ dayButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         buttons.forEach(btn => btn.classList.remove('-active'));
         button.classList.add('-active');
-        
-        selectedTime = true;
+        selectedTime = true
         checkSelection()
     });
     });
+    
     checkSelection()
+
   });
 });
+
 
 const buttons = document.querySelectorAll('.variable');
-
-buttons.forEach(button => {
-  button.addEventListener('click', (e) => {
-    buttons.forEach(btn => btn.classList.remove('-active'));
-    button.classList.add('-active');
-    
-    selectedTime = true;
-    checkSelection()
-  });
-});
-
 // проверка на выбор
 const checkSelection = () => {
     for (let i = 0 ; i<dayButtons.length; i++){
         if(dayButtons[i].classList.contains('-active')){
             selectedDay = true;     
-          
         }
     }
+
     if (selectedDay && selectedTime){
         document.getElementById('next').style.pointerEvents = 'auto';
         document.getElementById('next').style.backgroundColor = 'var(--accent-color)'
         document.getElementById('next').style.color='white'
+    }else {
+        document.getElementById('next').style.backgroundColor = '#cde7b7'
+        document.getElementById('next').style.pointerEvents = 'none';
+        document.getElementById('next').style.color='var(--accent-color)'
+
     }
 }
 

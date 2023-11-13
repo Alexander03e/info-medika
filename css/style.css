@@ -1510,10 +1510,12 @@ h2 {
 
 .calendar__time {
   margin-top: 2em;
+  display: flex;
+  flex-wrap: wrap;
+  gap:0.4em;
 }
 
 .calendar__time button {
-  background-color: transparent;
   border-radius: 1em;
 }
 
@@ -1572,3 +1574,11 @@ h2 {
     width: 100%;
   }
 }/*# sourceMappingURL=style.css.map */
+.free{
+  background-color: #cde7b7 ;
+  border: 1px solid var(--accent-color)
+}
+.busy{
+  background-color: transparent;
+  border: 1px solid gray;
+}
