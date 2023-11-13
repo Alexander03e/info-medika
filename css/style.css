@@ -1553,7 +1553,17 @@ h2 {
   width: 0;
   animation: typing 1.5s steps(40, end) infinite;
 }
-
+.big{
+  width:100vw !important;
+  height:100vh !important;
+  background-color: #333;
+  opacity: 0.3;
+  position:absolute;
+  top:0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  animation: typing 1s steps(60,end) infinite
+}
 @keyframes typing {
   from {
     width: 0;

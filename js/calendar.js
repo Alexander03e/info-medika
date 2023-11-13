@@ -1,58 +1,126 @@
 
 const date = new Date();
 const requestURL = 'https://rest.info-medika.ru:45678/GET_pl_subj/?details=1'
-const requestURL2 = 'https://rest.info-medika.ru:45678/get_pl_subj_grid/?pl_subj_id=166&d1=2023-09-10&d2=2023-12-20'
 const monthName = date.toLocaleString('default', {month: 'long'});
 const curdate = document.getElementById('curdate')
 const monthDay = date.getMonth()+1
+let selectedDay = false;
+let selectedTime = false;
 curdate.innerHTML =  `${monthName.slice(0,1).toUpperCase()}${monthName.slice(1)}  2023`
-
 const calendar = document.querySelector('.calendar')
 
 const showLoader = () => {
+    document.querySelectorAll('.docActivBtn').forEach(el=> el.style.pointerEvents = 'none')
     document.querySelector('.loader').classList.remove('hidden')
 }
 const hideLoader = () => {
+    document.querySelectorAll('.docActivBtn').forEach(el=> el.style.pointerEvents = 'auto')
     document.querySelector('.loader').classList.add('hidden')
 }
 const hideCalendar = () => {
     document.querySelector('.calendar').innerHTML = ' '
 }
+const nextBtnOff = () => {
+    document.getElementById('next').style.pointerEvents = 'none';
+    document.getElementById('next').style.backgroundColor = '#CDE7B7';
+}
+// const selectDoctor = (item) => {
+//     store.doctors.forEach(el => {
+//         let arrName = item.closest('.content-item').firstElementChild.textContent.split(' ')
+//         let surName = arrName[0]+' '+arrName[1]
+//         let arrNameApi = el.name.split(' ')
+    
+//         let surNameApi = arrNameApi[0]+' '+arrNameApi[1]
+//         nextBtnOff()
+//         if (surName === surNameApi) {
+//             console.log('true')
+//             generateCalApi(el.details)        
+//             bool = !bool
+//             hideLoader()
+//         }
+//         console.log(false)
+//     })
+// }
+////парсинг 
+let store = {
+    doctors:[]
+}
+let times = []
+let i=0;
 
-////
-
-
-fetch(requestURL2)
-    .then((response)=>{
-        return response.json()
+function getStateGrid(subj_id,item){
+    return new Promise(async(resolve,reject)=>{
+        try{
+            const requestURL2 = `https://rest.info-medika.ru:45678/get_pl_subj_grid/?pl_subj_id=${subj_id}&d1=2023-09-10&d2=2030-12-20`
+            const response_grid = await fetch(requestURL2)
+            const data_grid = await response_grid.json()
+            // times.push({id: subj_id, data:[]})
+            store.doctors.push({id:item.pl_subj_id, name: item.pl_subj_name, details: item.details, times:[]})
+            await data_grid.forEach((el) => {
+                store.doctors[i].times.push(el)
+            })
+            resolve()
+            i++
+        }
+        catch(e){
+            console.log(e)
+            reject(e)
+        }
     })
-    .then((data) => console.log(data))
+}
+
+async function getState(){
+    try {
+        const response = await fetch(requestURL)
+        const data = await response.json()
+        console.log(data)
+        const promises = data.map(el=>{
+            let subj_id = el.pl_subj_id
+            return getStateGrid(subj_id,el)
+        })
+        showLoader()
+        await Promise.all(promises)
+        console.log(store)
+    }catch(e){
+        console.log(e)
+    }
+}
+
+
+async function run(item){
+    await getState()
+    hideLoader()
+    console.log(store)
+}
+run()
+
+
+// fetch(requestURL2)
+//     .then((response)=>{
+//         return response.json()
+//     })
+//     .then((data) => console.log(data))
 
 
 //проверка запроса на pl_subj_grid
 
-
-let doctorsPrimary = document.querySelectorAll('.primary-reception')
+let doctorsPrimary = document.querySelectorAll('.docActivBtn')
 async function getData(item){
     try {
-        showLoader()
         hideCalendar()
-        const response = await fetch(requestURL)
-        const data = await response.json()
         console.log(data)
         let bool = false
-        await data.forEach(el => {
+        store.doctors.forEach(el => {
             
             let arrName = item.closest('.content-item').firstElementChild.textContent.split(' ')
-            let surName = arrName[0]
-           
-            let arrNameApi = el.pl_subj_name.split(' ')
-            let surNameApi = arrNameApi[0]
-           
+            let surName = arrName[0]+' '+arrName[1]
+            let arrNameApi = el.name.split(' ')
+
+            let surNameApi = arrNameApi[0]+' '+arrNameApi[1]
+            nextBtnOff()
             if (surName === surNameApi) {
-                generateCalApi(el.details)
+                generateCalApi(el.details, el.times)
                 bool = !bool
-                hideLoader()
             }
             
             hideLoader()
@@ -66,10 +134,11 @@ async function getData(item){
         
     }catch(e){
         console.log(e)
+        document.querySelector('.calendar').textContent = 'Ошибка при загрузке данных'
     }
 }
 
-function generateCalApi(details){
+function generateCalApi(details, times){
 
     clearField()
     document.querySelector('.calendar-days').classList.remove('hidden')
@@ -77,30 +146,35 @@ function generateCalApi(details){
     
     for (let i=0; i<monthLength; i++){
         
-        data.push({id:i, time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема'})
+        // data.push({id:i, time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема', docTime: [] })
         for (let j = 0; j<details.length; j++){
             let workDate = details[j].date.split('-')
             let workDay = workDate[2]
-            console.log(monthDay)
+            let wokrTime = []
             if (data[i].id == workDay && monthDay == workDate[1]){
-                data[i].time = `${details[j].start_time}-${details[j].end_time}`
+                data[i-1].time = `${details[j].start_time}-${details[j].end_time}`
+                for(let time of times){
+                
+                    if (time.date == details[j].date){
+                        data[i-1].docTime.push({start: time.time_start, end: time.time_end})
+                    }
+                }
             }
             
         }
     }
     generateCal(data)
-    
+    console.log(data)
 }
-//получение имени
+//выбор доктора
 doctorsPrimary.forEach(item => item.addEventListener('click',()=>{
     let name = item.closest('.content-item').firstElementChild.textContent
     let surname = name.split(' ')
     let result = surname[0] + '.' + surname[1].slice(0,1) + '.'+surname[2].slice(0,1);
     document.getElementById('doc__name').innerHTML = `Доступные дни приема для  ${result} :`
     console.log(item.closest('.content-item').firstElementChild.textContent)
-    
+    document.querySelector('.calendar__time').innerHTML = ' '
     getData(item)
-    
     })
 )
 
@@ -138,7 +212,7 @@ let data = []
 function clearField(){
     data = []
     for (let i=0; i<monthLength; i+=1){
-        data.push({id:i, time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема'})
+        data.push({id:i, time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема', docTime: []})
     }
     let container = document.querySelector(".calendar");
     while (container.firstChild) {
@@ -150,10 +224,10 @@ const timeEl = document.querySelector('.hide')
 
 
 //генерация календаря
-function generateCal(data){
-
+const generateCal = (data) =>{
 const timeBlock = document.createElement('div')
-
+selectedDay = false;
+selectedTime = false;
 for (let i=0; i<monthLength; i++){
     const calElement = document.createElement("button")
     const elementText = document.createTextNode(data[i].content)
@@ -186,14 +260,29 @@ for (let i=0; i<monthLength; i++){
 }
 
 const dayButtons = document.querySelectorAll('.variableDays');
-let selectedDay = false;
-let selectedTime = false;
+
 dayButtons.forEach(button => {
     button.addEventListener('click', (e) => {
-    console.log(e.target.textContent)
+    let id = e.currentTarget.textContent.split('.')[0]
+    selectedTime = false
     dayButtons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
-    
+    document.querySelector('.calendar__time').innerHTML = ' '
+    console.log(data[id-1].docTime)
+    for (let timeItem of (data[id-1].docTime)){
+        document.querySelector('.calendar__time').innerHTML += `<button class="variable">${timeItem.start}-${timeItem.end}</p>`
+    }   
+    const buttons = document.querySelectorAll('.variable');
+
+    buttons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        buttons.forEach(btn => btn.classList.remove('-active'));
+        button.classList.add('-active');
+        
+        selectedTime = true;
+        checkSelection()
+    });
+    });
     checkSelection()
   });
 });
@@ -210,6 +299,7 @@ buttons.forEach(button => {
   });
 });
 
+// проверка на выбор
 const checkSelection = () => {
     for (let i = 0 ; i<dayButtons.length; i++){
         if(dayButtons[i].classList.contains('-active')){
