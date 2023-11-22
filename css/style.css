@@ -20,6 +20,12 @@ p {
   padding: 0;
 }
 
+.hidden{
+  display:none
+}
+
+
+
 h1, h2, h3 {
   margin: 0;
   padding: 0;
@@ -724,14 +730,24 @@ body {
 }
 
 .parentTabs {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: 10px;
-  grid-row-gap: 0px;
-  margin: 0 auto;
-  margin-top: 13px;
-  padding-right: 10px;
+  display:flex;
+  flex-direction: row;
+  
+}
+.Registr_Table1{
+  border:1px solid black;
+  height:20em;
+  overflow: auto;
+}
+.Registr_Table2{
+  border:1px solid black;
+  height:20em;
+  overflow: auto;
+}
+.Registr_Table3{
+  height:20em;
+  overflow: auto;
+  border:1px solid black;
 }
 
 .table {

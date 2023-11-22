@@ -1,4 +1,3 @@
-
 const date = new Date();
 const requestURL = 'https://rest.info-medika.ru:45678/GET_pl_subj/?details=1'
 const monthName = date.toLocaleString('default', {month: 'long'});
@@ -32,7 +31,10 @@ let i=0;
 function getStateGrid(subj_id,item){
     return new Promise(async(resolve,reject)=>{
         try{
-            const requestURL2 = `https://rest.info-medika.ru:45678/get_pl_subj_grid/?pl_subj_id=${subj_id}&d1=2023-09-10&d2=2030-12-20`
+            
+            const requestURL2 = `https://rest.info-medika.ru:45678/get_pl_subj_grid/?pl_subj_id=${subj_id}&d1=${date.getFullYear()}-${monthDay}-${date.getDate()}&d2=${date.getFullYear()+1}-${monthDay+1}-${date.getDate()+5}`
+            // const requestURL2 = `https://rest.info-medika.ru:45678/get_pl_subj_grid/?pl_subj_id=${subj_id}&d1=2023-11-23&d2=2023-12-23`
+
             const response_grid = await fetch(requestURL2)
             const data_grid = await response_grid.json()
             // times.push({id: subj_id, data:[]})
@@ -69,6 +71,7 @@ async function getState(){
 async function run(item){
     await getState()
     hideLoader()
+    document.querySelector('.calendar').innerHTML = 'Выберите врача, чтобы открыть расписание'
 }
 //=====
 run()
@@ -119,12 +122,11 @@ function generateCalApi(details, times){
             let workDate = details[j].date.split('-')
             let workDay = workDate[2]
             let wokrTime = []
-            if (data[i].id == workDay && monthDay == workDate[1]){
-                data[i-1].time = `${details[j].start_time}-${details[j].end_time}`
+            if (data[i].id == workDay && data[i].month_day == workDate[1]){
+                data[i].time = `${details[j].start_time}-${details[j].end_time}`
                 for(let time of times){
-                
                     if (time.date == details[j].date){
-                        data[i-1].docTime.push({start: time.time_start, end: time.time_end, busy: time.busy})
+                        data[i].docTime.push({start: time.time_start, end: time.time_end, busy: time.busy})
                     }
                 }
             }
@@ -177,9 +179,18 @@ let data = []
 //очищает массив с данными
 function clearField(){
     data = []
+    let day = date.getDate()
+    let month_day = monthDay
     for (let i=0; i<monthLength; i+=1){
-        data.push({id:i, time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема', docTime: []})
+        data.push({id:day, month_day: month_day,time:'Нет приема', isActive:true, isWorking: false, content:'Нет приема', docTime: []})
+        day+=1
+        if (day>monthLength){
+            day = 1
+            month_day+=1
+        }
+
     }
+    console.log(data)
     let container = document.querySelector(".calendar");
     while (container.firstChild) {
       container.removeChild(container.firstChild);
@@ -194,13 +205,29 @@ const generateCal = (data) =>{
 const timeBlock = document.createElement('div')
 selectedDay = false;
 selectedTime = false;
+let todayNow = new Date();
+let dayNow = todayNow.getDate();
+let calendar_day = dayNow;
+let days_in_month = 0;
+let month_day = monthDay;
+let month_name = monthName;
+for (let i=0; i<=monthLength; i++){
+    days_in_month = i
+}
 for (let i=0; i<monthLength; i++){
     const calElement = document.createElement("button")
     const elementText = document.createTextNode(data[i].content)
     calElement.className = "calendar__item item variableDays"
     calElement.appendChild(elementText)
-    calElement.innerHTML='<p class="item__data">'+ (i+1)+'.'+monthDay+'</p>'+'<p>' + data[i].time+'</p>'
-    
+    calElement.innerHTML='<p class="item__data">'+ (calendar_day)+'.'+month_day+'</p>'+'<p>' + data[i].time+'</p>'
+    calendar_day+=1
+    if (calendar_day>days_in_month){
+        calendar_day = 1
+        month_day+=1
+        if (month_day>12){
+            month_day = 1
+        }
+    }
     calendar.appendChild(calElement)
     
     if (data[i].isActive===false){
@@ -235,16 +262,26 @@ dayButtons.forEach(button => {
     button.classList.add('-active');
     document.querySelector('.calendar__time').innerHTML = ' '
     checkSelection()
-    for (let timeItem of (data[id-1].docTime)){
-        let workStatus = ''
-        let btnStatus
-        if (timeItem.busy == 1){
-            workStatus = 'busy'
-            btnStatus = 'disabled'
-        } else if(timeItem.busy == 0){
-            workStatus = 'free'
-
+    let indexId
+    let i = 0;
+    let index = data.map(el=>{
+        if (el.id == id){
+            indexId = i
         }
+        i++
+    })
+
+        for (let timeItem of (data[indexId].docTime)){
+            let workStatus = ''
+            let btnStatus
+            if (timeItem.busy == 1){
+                workStatus = 'busy'
+                btnStatus = 'disabled'
+            } else if(timeItem.busy == 0){
+                workStatus = 'free'
+    
+            }
+    
 
         document.querySelector('.calendar__time').innerHTML += `<button class="variable ${workStatus}" ${btnStatus}>${timeItem.start}-${timeItem.end}</p>`
     }   

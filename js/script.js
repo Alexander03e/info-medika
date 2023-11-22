@@ -1,315 +1,148 @@
 
-'use strict'
+// Fetch data from the REST server
+fetch('https://rest.info-medika.ru:45678/GET_pl_exam_grp')
+.then(response => response.json())
+.then(data => {
+  // Create the table dynamically
+  const table = document.createElement('table');
+  const secondTable = document.createElement('table');
+  const thirdTable = document.createElement('table');
+  document.body.appendChild(secondTable);
+  // Create table body rows for each ID in the JSON data
+  const tbody = document.createElement('tbody');
+  data.forEach(item => {
+    const row = document.createElement('tr');
+    row.classList.add('row-table1')
+    // Create table cell for the ID property in the JSON data
+    const idCell = document.createElement('td');
+    idCell.style.display = 'none'; // Hide the ID cell
+    idCell.appendChild(document.createTextNode(item.pl_ex_gr_id));
 
-const table2A = document.querySelector('.table--2A');
-const table2B = document.querySelector('.table--2B');
-const table3D = document.querySelector('.table--3D');
-const table2children = document.querySelector('.table--2children');
-const tablecompTamTab = document.querySelector('.table--compTamTab');
-const tablelab = document.querySelector('.table--lab');
-const tablemam = document.querySelector('.table--mam');
-const tablestom = document.querySelector('.table--stom');
-const tableuzi = document.querySelector('.table--uzi');
-const tableecgs1 = document.querySelector('.table--ecgs1');
+    // Create table cell for the name property in the JSON data
+    const nameCell = document.createElement('td');
+
+    // Create a button element
+    const button = document.createElement('button');
+    button.classList.add('button-table1')
+    button.innerText = item.name; // Set the button text to the name property
+    // Add a click event listener to the button
+    
+    
+    button.addEventListener('click', () => {
+      // Get the ID from the hidden cell
+      const id = item.pl_ex_gr_id;
+      buttonsall = document.querySelectorAll('.button-table1')
+      buttonsall.forEach(button => {
+        button.classList.remove('-active')
+      })
+      button.classList.add('-active')
+     
+      console.log('s')
+      
+      // Make the AJAX request to the second REST server
+      fetch('https://rest.info-medika.ru:45678/GET_pl_exam/?pl_ex_gr_id='+ id)
+      .then(response => response.json())
+      .then(secondData => {
+        
+        // Create the second table dynamically
+        document.querySelector('.Registr_Table2').innerHTML=' ';
+        document.querySelector('.Registr_Table3').innerHTML=' ';
+        // Remove duplicate elements from the second data array
+        const uniqueData = Array.from(new Set(secondData));
+    
+        // Create table body rows for each item in the unique data
+        const secondTbody = document.createElement('tbody');
+        const modifiedNames = []; // Array to store unique modified names
+        uniqueData.forEach(secondItem => {
+          
+          const secondRow = document.createElement('tr');
+          secondRow.classList.add('row-table2')
+          // Remove "первичный" and "повторный" from the name property
+          const modifiedName = secondItem.name.replace(/первичный|повторный/g, '');
+    
+          
+          // Check if modified name already exists in the array
+          if (!modifiedNames.includes(modifiedName)) {
+            modifiedNames.push(modifiedName); // Add modified name to the array
+    
+            // Create table cell for the modified name property
+            const secondNameCell = document.createElement('td');
+            
+            const innerButton = document.createElement("button");
+            innerButton.classList.add('button-table2')
+            
+            innerButton.innerText = modifiedName;
+            secondNameCell.appendChild(innerButton);
+    
+            // Append the cell to the row
+            secondRow.appendChild(secondNameCell);
+
+            
+            
+            let innerButtonsall = document.querySelectorAll('.button-table2')
+            innerButton.addEventListener('click', function() {
+              innerButton.classList.add('-active')
+              innerButtonsall.forEach(button => {
+                console.log('ee')
+                button.classList.remove('-active')
+              })
+              button.classList.add('-active')
+              if (document.querySelector('.Registr_Table2').innerHTML!=' '){
+              document.querySelector('.Registr_Table3').innerHTML = '<button>Первичный</button><br><button>Повторный</button>'
+              } else{
+                document.querySelector('.Registr_Table3').innerHTML= ' '
+              }
+              
+            });
+            
+            // Append the row to the second table body
+            document.querySelector('.Registr_Table2').appendChild(secondRow);
+            
+                        
+            
+            
+          }
+        });
+    
+      
+        
+        // Append the second table to the document body
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      })
+    });
+
+    // Append the button to the name cell
+    nameCell.appendChild(button);
+
+    // Append the cells to the row
+    row.appendChild(idCell);
+    row.appendChild(nameCell);
+
+    // Append the row to the table body
+    tbody.appendChild(row);
+  });
+  document.querySelector('.Registr_Table1').appendChild(tbody);
+
+  // Append the table to the document body
+  document.body.appendChild(table);
+
+})
 
 
-const btnA = document.querySelector('.btn--A');
-const btnchildren = document.querySelector('.btn--children');
-const btnB = document.querySelector('.btn--B');
-const btnD = document.querySelector('.btn--D');
-const btnE = document.querySelector('.btn--E');
-const btnF = document.querySelector('.btn--F');
-const btnG = document.querySelector('.btn--G');
-const btnK = document.querySelector('.btn--K');
-const btngast = document.querySelector('.btn--gast');
-const btngemo = document.querySelector('.btn--gemo');
-const btnderm = document.querySelector('.btn--derm');
-const btninfect = document.querySelector('.btn--infect');
-const btncardiolog = document.querySelector('.btn--cardiolog');
-const btnginec = document.querySelector('.btn--ginec');
-const btnchildGastr = document.querySelector('.btn--childGastr');
-const btnchildGema = document.querySelector('.btn--childGema');
-const btnchildGinec = document.querySelector('.btn--childGinec');
-const btnchildDerm = document.querySelector('.btn--childDerm');
-const btnchildCardiolog = document.querySelector('.btn--childCardiolog');
-const btnchildKinez = document.querySelector('.btn--childKinez');
-const btnchildLogoped = document.querySelector('.btn--childLogoped');
-const btncompTam = document.querySelector('.btn--compTam');
-const btncompTamtabs = document.querySelector('.btn--compTamtabs');
-const btnlabs = document.querySelector('.btn--labs');
-const btnlabtabs = document.querySelector('.btn--labtabs');
-const btnmams = document.querySelector('.btn--mams');
-const btnmamtabs = document.querySelector('.btn--mamtabs');
-const btnstoms = document.querySelector('.btn--stoms');
-const btnstomtabs = document.querySelector('.btn--stomtabs');
-const btnuzis = document.querySelector('.btn--uzis');
-const btnuzitabs = document.querySelector('.btn--uzitabs');
-const btnophthalmologist = document.querySelector('.btn--ophthalmologist');
-const btnpsychologist = document.querySelector('.btn--psychologist');
-const btnpulmonologist = document.querySelector('.btn--pulmonologist');
-const btnreflexologist = document.querySelector('.btn--reflexologist');
-const btntherapist = document.querySelector('.btn--therapist');
-const btnsurgeon = document.querySelector('.btn--surgeon');
-const btnendocrinologist = document.querySelector('.btn--endocrinologist');
-const btnfetalheart = document.querySelector('.btn--fetal-heart');
-const btnlowerextremities = document.querySelector('.btn--lower-extremities');
-const btnthejoints = document.querySelector('.btn--the-joints');
-const btntheneck = document.querySelector('.btn--the-neck');
-const btnthyroidgland = document.querySelector('.btn--thyroid-gland');
-const btnecg = document.querySelector('.btn--ecg');
-const btnecgs = document.querySelector('.btn--ecgs');
+// Buttons.forEach (button => {
+//   button.addEventListener('click', (e)=>{
+//     selectedreception = false
 
+//     Buttons.forEach (btn => btn.classList.remove ('--active'));
+//     Button.classlist.add('--active')
+//     document.querySelector('.style1241')
+//     Checkselection()
+//   })
+// })
 
-
-
-const firstTableBtns = [btnA, btnB, btnchildren, btnecg, btncompTam, btnlabs, btnmams, btnstoms, btnuzis];
-const secondTableBtns = [btnD, btnE, btnF, btngast, btngemo, btnderm, btninfect, 
-  btncardiolog, btntherapist, btnreflexologist, btnpulmonologist, btnginec, btnchildGastr, btnchildGema, btnchildGinec, 
-  btnchildDerm, btnecgs, btnthyroidgland, btntheneck, btnthejoints, btnlowerextremities, btnfetalheart, btnendocrinologist, btnsurgeon, btnchildCardiolog, btnchildKinez, btnchildLogoped, 
-  btncompTamtabs, btnlabtabs, btnmamtabs, btnpsychologist, btnstomtabs, btnuzitabs, btnophthalmologist];
-const thirdTableBtns = [btnG, btnK];
-
-let isSecondTableVisible = false;
-
-const resChange = (first, second, third) => {
-  curRes = res.innerHTML.split('-');
-  if (first) {
-    res.innerHTML = first;
-  };
-  if (second) {
-    res.innerHTML = curRes[0] + `-${second}`;
-  };
-  if (third) {
-    res.innerHTML = curRes[0] + '-' + curRes[1] + `-${third}`;
-  };
-};
-
-const showSecondTable = (e) => {
-  let firstTableBtnIndex = e.target.classList[2].split('--').pop();
-  switch (firstTableBtnIndex) {
-    case 'A':
-      table2A.style.display = 'flex';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-    case 'B':
-      table2A.style.display = 'none';
-      table2B.style.display = 'flex';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'children':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'flex';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'compTam':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'flex';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'labs':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'flex';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'mams':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'flex';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'stoms':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'flex';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'uzis':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'flex';
-      tableecgs1.style.display = 'none'
-      break;
-      case 'ecg':
-      table2A.style.display = 'none';
-      table2B.style.display = 'none';
-      table3D.style.display = 'none';
-      table2children.style.display = 'none';
-      tablecompTamTab.style.display = 'none';
-      tablelab.style.display = 'none';
-      tablemam.style.display = 'none';
-      tablestom.style.display = 'none';
-      tableuzi.style.display = 'none';
-      tableecgs1.style.display = 'flex';
-      break;
-    default:
-      console.log('Error');
-  }
-  resChange(firstTableBtnIndex, false, false);
-};
-
-const showThirdTable = (e) => {
-  let secondTableBtnIndex = e.target.classList[2].split('--').pop();
-  switch (secondTableBtnIndex) {
-    case 'D':
-      table3D.style.display = 'flex';
-      break;
-    case 'E':
-      table3D.style.display = 'flex';
-      break;
-    case 'F':
-      table3D.style.display = 'flex';
-      break;
-      case 'gast':
-      table3D.style.display = 'flex';
-      break;
-      case 'gemo':
-      table3D.style.display = 'flex';
-      break;
-      case 'derm':
-      table3D.style.display = 'flex';
-      break;
-      case 'infect':
-      table3D.style.display = 'flex';
-      break;
-      case 'cardiolog':
-      table3D.style.display = 'flex';
-      break;
-      case 'ginec':
-      table3D.style.display = 'flex';
-      break;
-      case 'childGastr':
-      table3D.style.display = 'flex';
-      break;
-      case 'childGema':
-      table3D.style.display = 'flex';
-      break;
-      case 'childGinec':
-      table3D.style.display = 'flex';
-      break;
-      case 'childDerm':
-      table3D.style.display = 'flex';
-      break;
-      case 'childCardiolog':
-      table3D.style.display = 'flex';
-      break;
-      case 'childKinez':
-      table3D.style.display = 'flex';
-      break;
-      case 'childLogoped':
-      table3D.style.display = 'flex';
-      break;
-      case 'ophthalmologist':
-      table3D.style.display = 'flex';
-      break;
-      case 'psychologist':
-      table3D.style.display = 'flex';
-      break;
-      case 'pulmonologist':
-      table3D.style.display = 'flex';
-      break;
-      case 'reflexologist':
-      table3D.style.display = 'flex';
-      break;
-      case 'therapist':
-      table3D.style.display = 'flex';
-      break;
-      case 'surgeon':
-      table3D.style.display = 'flex';
-      break;
-      case 'endocrinologist':
-      table3D.style.display = 'flex';
-      break;
-      case 'fetal-heart':
-      table3D.style.display = 'flex';
-      break;
-      case 'lower-extremities':
-      table3D.style.display = 'flex';
-      break;
-      case 'the-joints':
-      table3D.style.display = 'flex';
-      break;
-      case 'the-neck':
-      table3D.style.display = 'flex';
-      break;
-      case 'thyroid-gland':
-      table3D.style.display = 'flex';
-      break;
-    default:
-      console.log('Error');
-  }
-  resChange(false, secondTableBtnIndex, false);
-};
-
-const thirdTableClick = (e) => {
-  let thirdTableBtnIndex = e.target.classList[2].split('--').pop();
-  resChange(false, false, thirdTableBtnIndex);
-}
-
-firstTableBtns.map(btn => {
-  btn.addEventListener('click', (e) => showSecondTable(e))
-});
-secondTableBtns.map(btn => {
-  btn.addEventListener('click', (e) => showThirdTable(e))
-});
-thirdTableBtns.map(btn => {
-  btn.addEventListener('click', (e) => thirdTableClick(e))
+.catch(error => {
+  console.error('Error:', error);
 });
 
-/////////////////////
-
-
-myElement.style.setProperty('--scrollbar-margin-right', anotherElement.clientHeight + 'px');
