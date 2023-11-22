@@ -4,9 +4,12 @@ const monthName = date.toLocaleString('default', {month: 'long'});
 const curdate = document.getElementById('curdate')
 const monthDay = date.getMonth()+1
 let selectedDay = false;
+
 let selectedTime = false;
 curdate.innerHTML =  `${monthName.slice(0,1).toUpperCase()}${monthName.slice(1)}  2023`
 const calendar = document.querySelector('.calendar')
+
+let my_choice = {doc_id:'', doc_date:'', doc_time:'', user_name:'', user_age:'', user_number:''}
 
 const showLoader = () => {
     document.querySelectorAll('.docActivBtn').forEach(el=> el.style.pointerEvents = 'none')
@@ -90,6 +93,7 @@ async function getData(item){
             let surNameApi = arrNameApi[0]+' '+arrNameApi[1]
             nextBtnOff()
             if (surName === surNameApi) {
+                my_choice.doc_id = 'здесь будет айди с 1 страницы епта'
                 generateCalApi(el.details, el.times)
                 bool = !bool
             }
@@ -257,7 +261,10 @@ const dayButtons = document.querySelectorAll('.variableDays');
 dayButtons.forEach(button => {
     button.addEventListener('click', (e) => {
     selectedTime = false 
-    let id = e.currentTarget.textContent.split('.')[0]
+    let id = e.currentTarget.textContent.split('.')
+
+    my_choice.doc_date = `${id[0]}.${id[1].slice(0,2)}.${date.getFullYear()}` 
+
     dayButtons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
     document.querySelector('.calendar__time').innerHTML = ' '
@@ -265,7 +272,7 @@ dayButtons.forEach(button => {
     let indexId
     let i = 0;
     let index = data.map(el=>{
-        if (el.id == id){
+        if (el.id == id[0]){
             indexId = i
         }
         i++
@@ -291,7 +298,9 @@ dayButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         buttons.forEach(btn => btn.classList.remove('-active'));
         button.classList.add('-active');
-        selectedTime = true
+        selectedTime = true 
+        my_choice.doc_time = e.currentTarget.textContent
+        console.log(my_choice)
         checkSelection()
     });
     });
