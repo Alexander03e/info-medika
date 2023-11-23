@@ -8,8 +8,7 @@ let selectedDay = false;
 let selectedTime = false;
 curdate.innerHTML =  `${monthName.slice(0,1).toUpperCase()}${monthName.slice(1)}  2023`
 const calendar = document.querySelector('.calendar')
-
-let my_choice = {doc_id:'', doc_date:'', doc_time:'', user_name:'', user_age:'', user_number:''}
+my_choice = JSON.parse(localStorage.getItem('my_choice1'))
 
 const showLoader = () => {
     document.querySelectorAll('.docActivBtn').forEach(el=> el.style.pointerEvents = 'none')
@@ -264,7 +263,6 @@ dayButtons.forEach(button => {
     let id = e.currentTarget.textContent.split('.')
 
     my_choice.doc_date = `${id[0]}.${id[1].slice(0,2)}.${date.getFullYear()}` 
-
     dayButtons.forEach(btn => btn.classList.remove('-active'));
     button.classList.add('-active');
     document.querySelector('.calendar__time').innerHTML = ' '
@@ -300,6 +298,7 @@ dayButtons.forEach(button => {
         button.classList.add('-active');
         selectedTime = true 
         my_choice.doc_time = e.currentTarget.textContent
+        localStorage.setItem('my_choice', JSON.stringify(my_choice))
         console.log(my_choice)
         checkSelection()
     });

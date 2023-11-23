@@ -1,9 +1,10 @@
-
 // Fetch data from the REST server
+let my_choice1 = {doc_id:'', doc_date:'', doc_time:'', user_name:'', user_age:'', user_number:''}
 fetch('https://rest.info-medika.ru:45678/GET_pl_exam_grp')
 .then(response => response.json())
 .then(data => {
   // Create the table dynamically
+  
   const table = document.createElement('table');
   const secondTable = document.createElement('table');
   const thirdTable = document.createElement('table');
@@ -88,9 +89,11 @@ fetch('https://rest.info-medika.ru:45678/GET_pl_exam_grp')
             
             let innerButtonsall = document.querySelectorAll('.button-table2')
             innerButton.addEventListener('click', function() {
-              
+              my_choice1.user_name = 'вот так записывать!!';
+              localStorage.setItem('my_choice1', JSON.stringify(my_choice1))
+              console.log(my_choice1)
               if (document.querySelector('.Registr_Table2').innerHTML!=' '){
-              document.querySelector('.Registr_Table3').innerHTML = '<button class="nav-links nav-lines table__btn btn">Первичный</button><br><button class="nav-links nav-lines table__btn btn">Повторный</button>'
+              document.querySelector('.Registr_Table3').innerHTML = '<button class="nav-links nav-lines table__btn btn btn-fix">Первичный</button><button class="nav-links nav-lines table__btn btn">Повторный</button>'
               } else{
                 document.querySelector('.Registr_Table3').innerHTML= ' '
               }
@@ -143,8 +146,12 @@ fetch('https://rest.info-medika.ru:45678/GET_pl_exam_grp')
 //     Checkselection()
 //   })
 // })
+document.querySelector('calendar-next-btn').addEventListener('click', ()=>{
+  localStorage.setItem('my_choice1', 'CHOICE')
+})
 
 .catch(error => {
   console.error('Error:', error);
 });
+
 
