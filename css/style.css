@@ -734,21 +734,7 @@ body {
   flex-direction: row;
   
 }
-.Registr_Table1{
-  border:1px solid black;
-  height:20em;
-  overflow: auto;
-}
-.Registr_Table2{
-  border:1px solid black;
-  height:20em;
-  overflow: auto;
-}
-.Registr_Table3{
-  height:20em;
-  overflow: auto;
-  border:1px solid black;
-}
+
 
 .table {
   border-radius: 25px;
@@ -765,62 +751,16 @@ body {
 }
 
 .table--2A {
-  display: none;
+
   background-color: #F6F6F6 !important;
 }
 
-.table--2B {
-  display: none;
-}
-
-.table--2C {
-  display: none;
-}
-
-.table--3D {
-  display: none;
-}
-
-.table--3E {
-  display: none;
-}
-
-.table--3F {
-  display: none;
-}
 
 .table--2children {
-  display: none;
+
   background-color: #F6F6F6;
 }
 
-.table--compTamTab {
-  display: none;
-}
-
-.table--lab {
-  display: none;
-}
-
-.table--mam {
-  display: none;
-}
-
-.table--stom {
-  display: none;
-}
-
-.table--ecgs1 {
-  display: none;
-}
-
-.table--uzi {
-  display: none;
-}
-
-.table > :not(:first-child) {
-  border-top: none;
-}
 
 .navs {
   max-width: 375px;
